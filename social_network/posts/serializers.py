@@ -20,3 +20,13 @@ class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('post_body')
+
+class PostUpdateSerializer(serializers.ModelSerializer):
+    """Class based on Post model and describes the
+    interface for creating new Post.
+    User can write only post body,
+    author and data will add automatically.
+    """
+    class Meta:
+        model = Post
+        fields = ('post_body', 'author', 'liked_by')
