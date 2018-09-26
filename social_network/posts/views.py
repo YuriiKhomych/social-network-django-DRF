@@ -1,7 +1,7 @@
 from .models import Post
-from .serializers import PostCreateSerializer, AllPostSerializer
+from .serializers import PostCreateSerializer, AllPostSerializer, PostUpdateSerializer
 
-from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -32,3 +32,11 @@ class PostCreateAPIView(ListCreateAPIView):
     def perform_create(self, serializer):
         # The request user is set as author automatically.
         serializer.save(author=self.request.user)
+
+
+class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    """This view aim to retrieve(get), create(put), update(patch) and
+     delete(delete) post by id"""
+    permission_classes = (IsAuthenticated,)
+    queryset = Post.objects.all()
+    serializer_class = PostUpdateSerializer
