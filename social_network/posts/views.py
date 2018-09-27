@@ -1,6 +1,9 @@
 from .models import Post
 from .serializers import PostCreateSerializer, AllPostSerializer, PostUpdateSerializer
 
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
@@ -40,3 +43,17 @@ class PostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Post.objects.all()
     serializer_class = PostUpdateSerializer
+
+
+class PostLikeAPIView(APIView):
+    def get(self, request, post_id):
+        if request.user.is_authenticated:
+            post = get_object_or_404(Post, id=post_id)
+            if request.user in post.liked_by.all():
+                post.liked_by.remove(request.user)
+            else:
+                post.liked_by.add(request.user)
+            post.save()
+            return Response({'success': True})
+        else:
+            return Response({'success': False})
