@@ -13,13 +13,15 @@ from django.conf import settings
 from django.contrib.auth.signals import user_logged_in
 
 from .utils_clearbit import get_data
+from .utils_pyhunter import check_email
 
 class CreateUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
         user = request.data
-        clearbit_data = get_data(request.data.get('email'))
+        email = request.data.get('email')
+        clearbit_data = get_data(email)
         if clearbit_data:
             user['first_name'] = clearbit_data.get('first_name') \
                 if clearbit_data.get('first_name') else ''
