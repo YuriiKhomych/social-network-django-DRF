@@ -12,12 +12,21 @@ from rest_framework_jwt.serializers import jwt_payload_handler
 from django.conf import settings
 from django.contrib.auth.signals import user_logged_in
 
+from .utils_clearbit import get_data
 
 class CreateUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
         user = request.data
+        clearbit_data = get_data(request.data.get('email'))
+        if clearbit_data:
+            user['first_name'] = clearbit_data.get('first_name') \
+                if clearbit_data.get('first_name') else ''
+            user['last_name'] = clearbit_data.get('last_name') \
+                if clearbit_data.get('last_name') else ''
+            user['company'] = clearbit_data.get('company') if \
+                clearbit_data.get('company') else ''
         serializer = UserSerializer(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
