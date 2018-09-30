@@ -15,6 +15,7 @@ from django.contrib.auth.signals import user_logged_in
 from .utils_clearbit import get_data
 from .utils_pyhunter import check_email
 
+
 class CreateUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
@@ -29,6 +30,12 @@ class CreateUserAPIView(APIView):
                 if clearbit_data.get('last_name') else ''
             user['company'] = clearbit_data.get('company') if \
                 clearbit_data.get('company') else ''
+        if not check_email(email):
+            return Response({
+                'email': email,
+                'detail': 'Your email undeliverable and does not webmail, '
+                          'please use a real email',
+            }, status=status.HTTP_403_FORBIDDEN)
         serializer = UserSerializer(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
