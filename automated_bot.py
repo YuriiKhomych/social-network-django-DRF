@@ -73,3 +73,18 @@ def create_posts(users_token_list, max_posts_per_user):
                   response.reason, json_response)
             post_ids.append(json_response.get('id'))
     return post_ids
+
+
+def like_posts(users_token_list, post_ids, max_likes_per_user):
+    for token in users_token_list:
+        header = {
+            'Authorization': f'Bearer {token}'
+        }
+        max_likes = random.choice([x for x in range(1, max_likes_per_user)])
+        for i in range(max_likes):
+            random_post = random.choice(post_ids)
+            response = requests.get(
+                f'http://127.0.0.1:8000/posts/like/{random_post}/',
+                headers=header
+            )
+            print('Like:', f'post_id: {random_post}', response.text)
