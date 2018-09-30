@@ -88,3 +88,23 @@ def like_posts(users_token_list, post_ids, max_likes_per_user):
                 headers=header
             )
             print('Like:', f'post_id: {random_post}', response.text)
+
+
+def main():
+    config_data = get_config_data()
+    number_of_users = int(config_data.get('number_of_users'))
+    max_posts_per_user = int(config_data.get('max_posts_per_user'))
+    max_likes_per_user = int(config_data.get('max_likes_per_user'))
+    users_data = generate_users_data(number_of_users, domains)
+    create_users(users_data)
+    users_token_list = login_users(users_data)
+    if users_token_list:
+        post_ids = create_posts(users_token_list, max_posts_per_user)
+        like_posts(users_token_list, post_ids, max_likes_per_user)
+    else:
+        print('Please use real email for create user or disable '
+              'pyhunter check_email(email) validation')
+
+
+if __name__ == "__main__":
+    main()
