@@ -55,3 +55,21 @@ def login_users(users_data):
             json_response = response.json()
             user_token_list.append(json_response['token'])
     return user_token_list
+
+
+def create_posts(users_token_list, max_posts_per_user):
+    post_ids = []
+    for token in users_token_list:
+        header = {
+            'Authorization': f'Bearer {token}'
+        }
+        max_posts = random.choice([x for x in range(1, max_posts_per_user)])
+        for i in range(max_posts):
+            data = {"post_body": get_random_name(letters, 30)}
+            response = requests.post('http://127.0.0.1:8000/posts/create/',
+                                     json=data, headers=header)
+            json_response = response.json()
+            print('Create post:', response.status_code,
+                  response.reason, json_response)
+            post_ids.append(json_response.get('id'))
+    return post_ids
