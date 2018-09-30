@@ -1,6 +1,8 @@
 import random
+import secrets
+import requests
 
-from string import ascii_lowercase
+from string import ascii_lowercase, ascii_letters, digits
 from configparser import ConfigParser
 
 domains = ["hotmail.com", "gmail.com", "i.ua", "mail.com", "yahoo.com"]
@@ -23,3 +25,14 @@ def get_random_domain(domains):
 
 def get_random_name(letters, length):
     return ''.join(random.choice(letters) for _ in range(length))
+
+
+def generate_users_data(nb, domains, length=10):
+    alphabet = ascii_letters + digits
+    data_list = []
+    for num in range(nb):
+        data_list.append({
+            'email': f'{get_random_name(letters, length)}@{get_random_domain(domains)}',
+            'password': ''.join(secrets.choice(alphabet) for _ in range(length)),
+        })
+    return data_list
