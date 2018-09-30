@@ -8,7 +8,7 @@ class AllPostSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Post
-        fields = ('post_body', 'author', 'liked_by', 'added')
+        fields = ('id', 'post_body', 'author', 'liked_by', 'added')
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
@@ -19,7 +19,8 @@ class PostCreateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Post
-        fields = ('post_body',)
+        fields = ('id', 'post_body',)
+
 
 class PostUpdateSerializer(serializers.ModelSerializer):
     """Class based on Post model and describes the
@@ -29,4 +30,4 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Post
-        fields = ('post_body', 'author', 'liked_by')
+        fields = ('id', 'post_body', 'author', 'liked_by')
