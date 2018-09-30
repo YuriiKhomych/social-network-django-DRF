@@ -5,9 +5,6 @@ import requests
 from string import ascii_lowercase, ascii_letters, digits
 from configparser import ConfigParser
 
-domains = ["hotmail.com", "gmail.com", "i.ua", "mail.com", "yahoo.com"]
-letters = ascii_lowercase
-
 
 def get_config_data(path='bot_settings.ini'):
     config = ConfigParser()
@@ -27,7 +24,7 @@ def get_random_name(letters, length):
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-def generate_users_data(nb, domains, length=10):
+def generate_users_data(nb, domains, letters, length=10):
     alphabet = ascii_letters + digits
     data_list = []
     for num in range(nb):
@@ -57,7 +54,7 @@ def login_users(users_data):
     return user_token_list
 
 
-def create_posts(users_token_list, max_posts_per_user):
+def create_posts(users_token_list, max_posts_per_user, letters):
     post_ids = []
     for token in users_token_list:
         header = {
@@ -91,15 +88,17 @@ def like_posts(users_token_list, post_ids, max_likes_per_user):
 
 
 def main():
+    domains = ["hotmail.com", "gmail.com", "i.ua", "mail.com", "yahoo.com"]
+    letters = ascii_lowercase
     config_data = get_config_data()
     number_of_users = int(config_data.get('number_of_users'))
     max_posts_per_user = int(config_data.get('max_posts_per_user'))
     max_likes_per_user = int(config_data.get('max_likes_per_user'))
-    users_data = generate_users_data(number_of_users, domains)
+    users_data = generate_users_data(number_of_users, domains, letters)
     create_users(users_data)
     users_token_list = login_users(users_data)
     if users_token_list:
-        post_ids = create_posts(users_token_list, max_posts_per_user)
+        post_ids = create_posts(users_token_list, max_posts_per_user, letters)
         like_posts(users_token_list, post_ids, max_likes_per_user)
     else:
         print('Please use real email for create user or disable '
