@@ -44,3 +44,14 @@ def create_users(users_data):
                                  json=user)
         print('Create user:', response.status_code,
               response.reason, response.json())
+
+
+def login_users(users_data):
+    user_token_list = []
+    for user in users_data:
+        response = requests.post('http://127.0.0.1:8000/users/login/',
+                                 json=user)
+        if response.status_code != 200:
+            json_response = response.json()
+            user_token_list.append(json_response['token'])
+    return user_token_list
