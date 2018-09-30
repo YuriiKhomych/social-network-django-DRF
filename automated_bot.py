@@ -36,3 +36,11 @@ def generate_users_data(nb, domains, length=10):
             'password': ''.join(secrets.choice(alphabet) for _ in range(length)),
         })
     return data_list
+
+
+def create_users(users_data):
+    for user in users_data:
+        response = requests.post('http://127.0.0.1:8000/users/create/',
+                                 json=user)
+        print('Create user:', response.status_code,
+              response.reason, response.json())
