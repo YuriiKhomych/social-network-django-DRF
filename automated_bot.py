@@ -48,9 +48,8 @@ def login_users(users_data):
     for user in users_data:
         response = requests.post('http://127.0.0.1:8000/users/login/',
                                  json=user)
-        if response.status_code != 200:
-            json_response = response.json()
-            user_token_list.append(json_response['token'])
+        json_response = response.json()
+        user_token_list.append(json_response.get('token'))
     return user_token_list
 
 
@@ -97,12 +96,8 @@ def main():
     users_data = generate_users_data(number_of_users, domains, letters)
     create_users(users_data)
     users_token_list = login_users(users_data)
-    if users_token_list:
-        post_ids = create_posts(users_token_list, max_posts_per_user, letters)
-        like_posts(users_token_list, post_ids, max_likes_per_user)
-    else:
-        print('Please use real email for create user or disable '
-              'pyhunter check_email(email) validation')
+    post_ids = create_posts(users_token_list, max_posts_per_user, letters)
+    like_posts(users_token_list, post_ids, max_likes_per_user)
 
 
 if __name__ == "__main__":
